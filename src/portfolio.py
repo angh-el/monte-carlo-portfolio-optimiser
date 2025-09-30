@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 import datetime as dt
-from data_fetcher import DataFetcher
+
+from .data_fetcher import DataFetcher
 
 
 class Portfolio:
@@ -32,4 +33,4 @@ class Portfolio:
         # percentage change
         self.returns = self.prices.pct_change().dropna()
         self.mean_returns = self.returns.mean()
-        self.cov_matrix = self.returns.cov
+        self.cov_matrix = self.returns.cov()
