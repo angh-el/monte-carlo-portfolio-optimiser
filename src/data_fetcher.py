@@ -11,5 +11,5 @@ class DataFetcher:
         self.end = end
 
     def get_price_data(self):
-        data = yf.download(self.ticker, start=self.start, end=self.end)['Close']
+        data = yf.download(self.ticker, start=self.start, end=self.end, auto_adjust=True)['Close']
         return data
