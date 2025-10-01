@@ -17,13 +17,13 @@ class Simulator:
     def random_portfolios(self, n=5000):
         results = []
         for _ in range(n):
-            # weights = np.random.dirichlet(np.ones(self.n_assets))
+            weights = np.random.dirichlet(np.ones(self.n_assets))
             # weights = np.random.random(self.n_assets)
             # weights /= np.sum(weights)
 
             # weights = self.optimiser.min_variance()
             # weights = self.optimiser.max_sharpe()
-            weights = self.optimiser.target_return(0.001)
+            # weights = self.optimiser.target_return(0.001)
 
 
             port_return = np.dot(weights, self.mean_returns)
