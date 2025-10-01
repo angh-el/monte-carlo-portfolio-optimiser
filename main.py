@@ -8,10 +8,10 @@ from src.simulator import Simulator
 import src.risk_metrics as risk_metrics
 
 
-tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'JPM']
+tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'JPM', 'MMM', 'AMD']
 
 end_date = dt.datetime.now()
-start_date = end_date - dt.timedelta(days=300) 
+start_date = end_date - dt.timedelta(days=365) 
 
 portfolio = Portfolio(tickers)
 
@@ -21,7 +21,9 @@ optimiser = Optimiser(portfolio)
 # print(optimiser.max_sharpe())
 # print(optimiser.target_return(0.001))
 
-simulator = Simulator(portfolio)
+print("\n\n")
+
+simulator = Simulator(portfolio, optimiser)
 results = simulator.random_portfolios()
 
 top_portfolios = results.nlargest(5, "Sharpe")
@@ -48,8 +50,13 @@ print("volatility ", vol)
 
 
 #############################
-weights = np.random.random(len(portfolio.mean_returns))
-weights /= np.sum(weights)
+# weights = np.random.random(len(portfolio.mean_returns))
+# weights /= np.sum(weights)
+
+# weights = optimiser.min_variance()
+# weights = optimiser.max_sharpe()
+weights = optimiser.target_return(0.001)
+
 
 mc_sims = 100
 T = 100
