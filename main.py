@@ -17,7 +17,7 @@ optimiser = Optimiser(portfolio)
 
 # print(optimiser.min_variance())
 # print(optimiser.max_sharpe())
-print(optimiser.target_return(0.001))
+# print(optimiser.target_return(0.001))
 
 
 
