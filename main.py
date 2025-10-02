@@ -11,8 +11,10 @@ from src.visualiser import Visualiser
 from pypfopt import expected_returns, risk_models, EfficientFrontier
 
 # tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'JPM', 'MMM', 'AMD']
-tickers = ['MSFT', 'GOOGL', 'JPM', 'MMM', 'NVDA']
-
+# tickers = ['MSFT', 'GOOGL', 'JPM', 'MMM', 'NVDA', 'HOOD', 'PLTR']
+# tickers = ['NVDA', 'GOOGL']
+# tickers = ['AAPL', 'MSFT', 'GOOG', 'AMZN']
+tickers = ['HOOD', 'STX', 'WDC', 'PLTR', 'NEM', 'MU', 'APP', 'GEV']
 
 end_date = dt.datetime.now()
 start_date = end_date - dt.timedelta(days=365) 
@@ -21,52 +23,30 @@ portfolio = Portfolio(tickers)
 
 optimiser = Optimiser(portfolio)
 
-print(optimiser.min_variance())
-print(optimiser.max_sharpe())
-print(optimiser.target_return(0.001))
 
-# data = portfolio.prices
-# mu = expected_returns.mean_historical_return(data)
-# S = risk_models.sample_cov(data)
-# ef = EfficientFrontier(mu, S)
-# ef.add_constraint(lambda w: w >= 0.1)
+# print(optimiser.min_variance())
+# print(optimiser.max_sharpe())
+# print(optimiser.target_return(0.001))
 
-# max_sharpe_weights = ef.max_sharpe()
-# cleaned_max_sharpe = ef.clean_weights()
-# print("\nMax Sharpe Weights:")
-# print(cleaned_max_sharpe)
-
-# performance = ef.portfolio_performance(verbose=True)
-# max_sharpe_array = np.array([cleaned_max_sharpe[t] for t in tickers])
-# ef_min_vol = EfficientFrontier(mu, S)
-# ef_min_vol.min_volatility()
-# print("\nMin Volatility Weights:")
-# print(ef_min_vol.clean_weights())
-
-# target_return = 0.05  
-# ef_target = EfficientFrontier(mu, S)
-# ef_target.efficient_return(target_return=target_return)
-# print(f"\nTarget Return Portfolio ({target_return*100:.0f}% return):")
-# print(ef_target.clean_weights())
 
 
 print("\n\n")
 
-# simulator = Simulator(portfolio, optimiser)
-# results = simulator.random_portfolios()
+simulator = Simulator(portfolio, optimiser)
+results = simulator.random_portfolios()
 
-# top_portfolios = results.nlargest(5, "Sharpe")
-# print("Top 5 random portolio - by sharpe")
-# print(top_portfolios[["Return", "Volatility", "Sharpe"]])
+top_portfolios = results.nlargest(5, "Sharpe")
+print("Top 5 random portolio - by sharpe")
+print(top_portfolios[["Return", "Volatility", "Sharpe"]])
 
 
-# returns = portfolio.returns.mean(axis=1)
-# cummulative = (1+returns).cumprod()
+returns = portfolio.returns.mean(axis=1)
+cummulative = (1+returns).cumprod()
 
-# var = risk_metrics.value_at_risk(returns)
-# cvar = risk_metrics.conditional_var(returns)
-# max_drawdown = risk_metrics.max_drawdown(cummulative)
-# vol = risk_metrics.volatility(returns)
+var = risk_metrics.value_at_risk(returns)
+cvar = risk_metrics.conditional_var(returns)
+max_drawdown = risk_metrics.max_drawdown(cummulative)
+vol = risk_metrics.volatility(returns)
 
 # print("\n")
 # print("Risk metrics (Monte Carlo Simulation #1)")
@@ -93,22 +73,22 @@ print("\n\n")
 
 
 
-# visualiser = Visualiser(portfolio)
+visualiser = Visualiser(portfolio)
 
 # visualiser.plot_monte_carlo_cloud(results)
 # visualiser.plot_efficient_frontier(results)
 
 
-# mc_best = {
-#     "weights": results.loc[results["Sharpe"].idxmax(), "Weights"],
-#     "returns": portfolio.returns
-# }
+mc_best = {
+    "weights": results.loc[results["Sharpe"].idxmax(), "Weights"],
+    "returns": portfolio.returns
+}
 
-# mpt_top = optimiser.max_sharpe()
+mpt_top = optimiser.max_sharpe(0)
 # mpt_top = optimiser.min_variance()
 # mpt_top = optimiser.max_sharpe()
 
-# visualiser.plot_weights_and_metrics(mc_best, mpt_top, tickers)
+visualiser.plot_weights_and_metrics(mc_best, mpt_top, tickers)
 
 
 # #############################

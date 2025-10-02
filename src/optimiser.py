@@ -7,7 +7,7 @@ from pypfopt import EfficientFrontier, expected_returns, risk_models
 class Optimiser:
 
 
-    def __init__(self, portfolio, risk_free_rate=0.02):
+    def __init__(self, portfolio, risk_free_rate=0.01):
         self.portfolio = portfolio
         self.prices = portfolio.prices
         self.tickers = portfolio.prices.columns.tolist()
