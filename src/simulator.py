@@ -35,14 +35,36 @@ class Simulator:
         return pd.DataFrame(results)
     
     def simulate_paths(self, n_sims = 1000, horizon = 252):
-        L = np.linalg.cholesky(self.cov_matrix)
-        mean = self.mean_returns / horizon
-        sims = np.zeros((n_sims, horizon, self.n_assets))
+        weights = np.random.random(len(self.portfolio.mean_returns))
+        weights /= np.sum(weights)
 
-        for i in range(n_sims):
-            shocks = np.random.normal(size=(horizon, self.n_assets))
-            correlated = shocks @ L.T
-            sims[i] = mean + correlated
+        mc_sims = 100
+        T = 100
 
-        return sims
+        initialPortfolio = 10000
+
+        meanM = np.full(shape=(T, len(weights)), fill_value=self.portfolio.mean_returns)
+        meanM = meanM.T
+
+        portfolio_sims = np.full(shape=(T, mc_sims), fill_value=0.0)
+
+        for m in range(0, mc_sims):
+            Z = np.random.normal(size=(T, len(weights)))
+            L = np.linalg.cholesky(self.portfolio.cov_matrix)
+            daily_returns = meanM + np.inner(L, Z)
+            portfolio_sims[:,m] = np.cumprod(np.inner(weights, daily_returns.T)+1)*initialPortfolio
+        
+        return portfolio_sims
     
+    def highest_sharpe_portoflios(self, results):
+        top_10 = results.sort_values(by="Sharpe", ascending=False).head(10)
+        top_weights = np.stack(top_10["Weights"].values)
+        average_weights = np.mean(top_weights, axis=0)
+        mc_best = {
+            "weights": average_weights,
+            "returns": self.portfolio.returns
+        }
+
+        return mc_best
+
+            

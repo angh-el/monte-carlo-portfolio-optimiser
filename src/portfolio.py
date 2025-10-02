@@ -7,7 +7,7 @@ from .data_fetcher import DataFetcher
 
 class Portfolio:
     
-    def __init__(self, tickers, start=dt.datetime.now() - dt.timedelta(days=300), end=dt.datetime.now()):
+    def __init__(self, tickers, start=dt.datetime.now() - dt.timedelta(days=356), end=dt.datetime.now()):
         self.tickers = tickers
         self.start = start
         self.end = end
