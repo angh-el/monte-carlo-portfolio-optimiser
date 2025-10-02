@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
-import risk_metrics as risk_metrics 
 
+from . import risk_metrics
 
 class Visualiser:
     
@@ -17,7 +17,7 @@ class Visualiser:
             results["Volatility"],
             results["Return"],
             c=results["Sharpe"],
-            cmpa="viridis",
+            cmap="viridis",
             alpha=0.5
         )
 
@@ -35,7 +35,7 @@ class Visualiser:
             results["Volatility"],
             results["Return"],
             c=results["Sharpe"],
-            cmap="virdis",
+            cmap="viridis",
             alpha=0.7
         )
 
@@ -52,7 +52,7 @@ class Visualiser:
 
         # monte carlo pie
         mc_weights = mc_best["weights"]
-        axes[0].pie(mc_weights, labels=labels, autopct="%1.1f%%", starangle=90)
+        axes[0].pie(mc_weights, labels=labels, autopct="%1.1f%%", startangle=90)
         axes[0].set_title("Monte Carlo Best Sharpe Portfolio")
 
         # risk metrics
@@ -73,8 +73,9 @@ class Visualiser:
 
 
         # pie 2 modern portfolio theory portfolio weights
-        avg_weights = np.mean(mpt, axis=0)
-        axes[1].pie(avg_weights, labels=labels, autopct="%1.1f%%", startangle=90)
+        # avg_weights = np.mean(mpt, axis=0)
+        avg_weights = mpt
+        axes[1].pie(np.ravel(avg_weights), labels=labels, autopct="%1.1f%%", startangle=90)
         axes[1].set_title("MPT Avg Weights")
 
         # risk metrics for mpt
@@ -92,6 +93,9 @@ class Visualiser:
             f"Volatility: {mpt_vol:.4f}"
         )
         axes[1].text(0, -1.3, mpt_text, ha="center", va="top", fontsize=10)
+
+        print("Modern Portfolio Theory: ", mpt)
+        print("Monte Carlo Sim: ", mc_best)
 
         plt.tight_layout()
         plt.show()
